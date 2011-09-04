@@ -1,0 +1,3 @@
+h1. Recipe Index
+
+Recipes cover problems that are easier to fix than tutorials, generally not involving more than one file or a few functions.  Solutions also tend to be presented whole-sale, then described, vs. iteratively expanded upon.

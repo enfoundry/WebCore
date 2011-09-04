@@ -1,0 +1,27 @@
+h1. An Introduction to the WebCore Web Application Framework
+
+WebCore is a lightweight and extremely fast Python web framework based on the "WSGI(Web Server Gateway Interface)":wsgi standard and comprised of the WebCore WSGI application, multiple middleware layers, and a front-end WSGI-compliant server of your choice.  Designed for simplicity, flexibility, and efficiency, WebCore allows you to rapidly prototype your application while not being hampered by framework decisions when your application's needs expand.
+
+WebCore features out-of-the-box support for the following low-level features common to most, if not all, web applications:
+
+* Persistent sessions and caches.
+* Light-weight authentication and authorization.
+* Multiple database connections.
+* Extensible template engine renderers, such as "Genshi":template-genshi, "Mako":template-mako, and "Jinja2":template-jinja2, and support for multiple serialization formats, such as "JSON":format-json and "Bencode":format-bencode.
+* Internationalization and localization for multi-lingual applications.
+* Multiple URL dispatch mechanisms such as "object dispatch":section-object-dispatch and "routing":section-url-routing.
+* First-class RPC(Remote Procedure Call) support for "XML-RPC":rpc-xml, "Flash AMF":rpc-amf, and "JSON-RPC":rpc-json.
+
+No single set of components is enforced by WebCore; for the most part all dependancies are declared by your application, not the framework.
+
+As a demonstration, the smallest WebCore application is a single file.  Its entirety is as follows:
+
+code.
+import web.core
+ 
+class RootController(web.core.Controller):
+    def index(self, name="program"):
+        return 'Hello, {name}.'.format(name=name)
+ 
+app = web.core.Application.factory(root=RootController, debug=False)
+__import__('paste.httpserver').httpserver.serve(app, host='127.0.0.1', port='8080')

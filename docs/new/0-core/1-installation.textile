@@ -1,0 +1,202 @@
+h1. Installing the WebCore Web Framework
+
+There are several methods of installing WebCore; the method you choose will depend on your level of experience and platform.
+
+We recommend installing WebCore into a virtual environment which will prevent any interference with your system's installed packages and won't unknowingly upgrade any Python libraries that your system needs.  The bootstrap script (the preferred installation method) will create a virtual environment for you automatically.
+
+If you want to build packages of WebCore for your system please send an email to "contact@webcore.org":mailto:contact@webcore.org.
+
+
+h2. Prerequisites
+
+# "Python":python 2.6 or above, though currently less than 3.0.
+
+If you prefer to install WebCore manually, you will additionally require:
+
+# "distribute":package-distribute
+# "virtualenv":package-virtualenv
+
+h3. Python
+
+WebCore works with any version of Python 2.6 or later and less than 3.0. The most widely deployed version of python at the moment of this writing is version 2.6, though 2.7 is available and worth a look at.  Python 3.0 is currently unsupported due to lack of support in many of our upstream packages, though we do look forward to support in the near future. [1]
+
+We recommend you use your system's default Python install or follow the instructions provided on the "Python website":python-download.
+
+If you don't know which version of Python you have installed you can find out with the following command:
+
+code(lang-bsh). $ python --version
+
+h3. Non-Python Dependencies
+
+You will most likely need a C compiler and the Python header files. Please see the appropriate section below.
+
+h4. Windows
+
+You may want the "win32api":win32api package as it provides some very useful tools for Windows developers, the first you will encounter is the ability to make virtualenv work with paths that contain spaces.
+
+h4. Cygwin
+
+You must perform all operations, including setup operations, within DOS command windows, not Cygwin command window.
+
+h4. MacOS X
+
+Xcode is required to build some binary dependancies and is available on the OS X CD or from Apple's "developer site":apple-developer.
+
+h4. Debian, Ubuntu 
+
+Debian derived Linux versions require @python-dev@ and @build-essential@.
+
+code(lang-bsh).
+$ sudo apt-get install python-dev
+$ sudo apt-get install build-essential
+
+h4. RedHat, Fedora, CentOS
+
+Users of these systems will need the ``python-devel`` RPM.
+
+code(lang-bsh). $ sudo yum install python-devel
+
+h4. Gentoo
+
+Nothing extra is required as Gentoo has a full development environment configured by default.
+
+h4. Other Linux and UNIX
+
+You'll need a working version of the GCC compiler installed, as well as the Python headers.
+
+
+h2. Installation using the Bootstrap Script
+
+Download the "bootstrap script":bootstrap and run it from a command prompt.  The bootstrap script accepts the same arguments as the @virtualenv@ command, and defaults to using the @--distribute@ and @--no-site-packages@ options.  Pass the name of your desired virtual environment as the last argument.
+
+For example, to download and install in one step you can run the following:
+
+code(lang-bsh). $ curl get.web-core.org | python - myenv
+
+bq(note). If you don't like or don't have @curl@, you can use @wget@ by replacing @curl@ in the above command with @wget -O -@.
+
+
+h2. Manual Installation
+
+bq(warning). This approach is not recommended unless you have a very good reason to do so.
+
+
+h3. Installing Distribute
+
+Download the "distribute bootstrap script":bootstrap-distribute and then run it from the command line.
+
+It is also recommended to install an improved Python package manager, @pip@.
+
+h4. Windows
+
+code(lang-bsh).
+curl http://python-distribute.org/distribute_setup.py | python -
+easy_install pip
+
+h4. Unix
+
+code(lang-bsh).
+$ curl http://python-distribute.org/distribute_setup.py | sudo python -
+$ sudo easy_install pip
+
+Or without root privileges for @pip@:
+
+code(lang-bsh).
+$ curl http://python-distribute.org/distribute_setup.py | sudo python -
+$ easy_install --install-dir=$HOME/lib/python2.6/ --script-dir=$HOME/bin/ pip
+
+
+h3. Installing virtualenv
+
+We strongly advise you to install all your WebCore apps inside a virtual environment.  If you ask for support without a @virtualenv@ to isolate your packages we will usually ask you to go get @virtualenv@ before proceeding further.
+
+@virtualenv@ is a tool that you can use to keep your Python path clean and tidy.  It allows you to install new packages and all of their dependencies into a clean working environment, thus eliminating the possibility that installing WebCore or some other new package will break your existing Python environment _and potentially system-level tools provided by your operating system vendor_.
+
+The other great advantage of @virtualenv@ is that it allows you to run multiple versions of the same package in parallel which is great for running both the production version and the development version of an application on the same machine.
+
+People with a systems administration background could consider @virtualenv@ as a variation of an OS jail (or _chroot_) which is also good for security as your installation is totally isolated. This makes @virtualenv@ great for deploying production sites.
+
+h4. Windows
+
+code(lang-bsh). easy_install virtualenv
+
+h4. Unix
+
+code(lang-bsh). $ sudo easy_install virtualenv
+
+Or without root privileges:
+
+code(lang-bsh). $ easy_install --install-dir=$HOME/lib/python2.5/ --script-dir=$HOME/bin/ virtualenv
+
+
+h3. Installing WebCore
+
+bq(note). Please note we are using @core@ as the name of the virtual environment.  This is simply a convention in our documentation, the name of the @virtualenv@ depends totally on the user and should be named according to the project it contains.
+
+h4. Create a Virtual Environment
+
+First, @cd@ to the directory you want to contain the virtual environment for WebCore. The environment will be created as a subdirectory here.
+
+Now create a new virtual environment named @core@:
+
+code(lang-bsh). $ virtualenv --distribute --no-site-packages core
+
+h4. Activate the Virtual Environment
+
+Enter the environment directory and activate it.
+
+code(lang-bsh).
+$ cd core
+$ . bin/activate
+
+Windows users should execute @Scripts\activate.bat@ instead of using the dot-notation.
+
+If you are using a UNIX shell your prompt should change to indicate that you're in an environment.  It will look something like this:
+
+code(lang-bsh). (core)username@host:~/core$
+
+The net result of activating your environment is that your @PATH@ variable now points to the tools in @core/bin@ and Python will look for libraries in @core/lib@.  You will need to reactivate your environment every time you want to work on the project contained therein.
+
+h4. Install WebCore
+
+You'll be able to install the latest released version of WebCore via:
+
+code(lang-bsh). (core)$ pip install WebCore
+
+bq(caution). If you are upgrading from a previous version you should add @-U@ after @install@ in the above command.
+
+WebCore and all of its core dependencies should download and install themselves.
+
+h4. Deactivating the Environment
+
+When you are done working simply run the @deactivate@ command.  This isn't really needed but it's good practice if you want to switch your shell to do some other work.
+
+
+h3. Installing the Development Version of WebCore
+
+h4. Getting Git
+
+"Git":git-scm is an efficient DVCS(Distributed Version Control System) or SCM(Source Code Management) system.  All major Linux and UNIX distributions have this installed. The package is normally named @git@.  If Git isn't already available to you, please follow the instructions on the "Git website":git-scm.
+
+h4. Getting the Source
+
+Check out the latest code from the GitHub repository into your virtual environment:
+
+code(lang-bsh). (core)$ git clone git://github.com/marrow/WebCore.git
+
+h4. Installing the Sources
+
+Tell Python to use these version that you have just cloned:
+
+code(lang-bsh). (core)$ (cd WebCore; python setup.py develop)
+
+All WebCore core dependencies will be installed automatically.
+
+
+h2. Validate an Installation
+
+To check if you installed WebCore correctly, type:
+
+code(lang-bsh). (core)$ python -c 'print __import__("web.release").release.version'
+
+fn1. This is not entirely true; experimental support is available to developers by using "marrow.server.http":marrow-server-http and adapter included in that package.
