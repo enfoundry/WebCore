@@ -17,3 +17,8 @@
 [template-mako]http://www.makotemplates.org/
 [win32api]http://starship.python.net/crew/mhammond/win32/
 [wsgi]http://wsgi.org/
+[marrow-style]https://github.com/marrow/marrow.github.com/wiki/Python-Style-Guide
+[marrow-development]https://github.com/marrow/marrow.github.com/wiki/Git-Branching-Model
+[marrow-release]https://github.com/marrow/marrow.github.com/wiki/Release-Process
+[marrow-zen]https://github.com/marrow/marrow.github.com/wiki/Zen
+[marrow]http://marrowproject.org/

@@ -1,1 +1,11 @@
-h1. Basic WebCore Usage
+h1. Basic WebCore Concepts & Usage
+
+The sections in this chapter will outline:
+
+* How you can rapidly get started developing your own powerful web applications.
+* The various components of good web application structure.
+* Connecting to one or more database.
+* How to utilize reusable templates.
+* Several methods for deploying your application to production environments.
+
+WebCore is fundamentally a very light-weight way of mapping URLs to code and configuring these other components in a simple and reproducible way.  No formal structure is _forced_ on your application, though several options are suggested within this documentation.

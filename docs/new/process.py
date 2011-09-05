@@ -59,19 +59,20 @@ class Document(object):
         
         self.title = title
     
-    def __call__(self, base, references=None, prefix="", suffix=""):
+    def __call__(self, base, references=None, prefix="", suffix="", intersphinx={}):
         source = os.path.join(base, self.path)
         target = os.path.join(base, '_html', self.target)
         
-        if os.path.exists(target) and \
-                os.path.getmtime(target) > os.path.getmtime(source):
-            log.warning("    Skipping unmodified document.")
-            return None
+        # if os.path.exists(target) and \
+        #         os.path.getmtime(target) > os.path.getmtime(source):
+        #     log.warning("    Skipping unmodified document.")
+        #     return None
         
         with open(source, 'r') as fh:
             content = prefix + fh.read() + suffix
         
         render = Parser(content)
+        render._links.update(intersphinx)
         
         breadcrumb = [self]
         node = self
@@ -156,6 +157,7 @@ def main(base="."):
     files = []
     prefix = ""
     suffix = ""
+    intersphinx = {}
     
     log.basicConfig(
             level = log.DEBUG if '-v' in sys.argv else log.WARN if '-q' in sys.argv else log.INFO,
@@ -198,7 +200,24 @@ def main(base="."):
     references = dict((tuple(d.section), d) for d in files)
     links = dict(('section-' + '.'.join(str(i) for i in d.section), d.target) for d in files)
     
-    log.debug("Reticulating splines.")
+    log.info("Reticulating splines.")
+    
+    if os.path.exists(os.path.join(base, 'intersphinx.inv')):
+        with open(os.path.join(base, 'intersphinx.inv'), 'r') as fh:
+            baseurl = ""
+            package = ""
+            for line in fh:
+                if line.startswith('#') or not line.strip():
+                    continue
+                if line.startswith('%'):
+                    baseurl = line[1:].strip()
+                    continue
+                if line.startswith('!'):
+                    package = line[1:].strip()
+                    continue
+                
+                parts = line.strip().split()
+                intersphinx["{package}.{1}.{0}".format(*parts, package=package)] = "{baseurl}{2}#{0}".format(*parts, baseurl=baseurl)
     
     for document in files:
         log.debug("")
@@ -223,7 +242,7 @@ def main(base="."):
         document.previous = references.get(tuple(document.section[:-1] + [document.section[-1] - 1]), None)
         
         log.debug("    Rendering document...")
-        result = document(base, links, prefix, suffix)
+        result = document(base, links, prefix, suffix, intersphinx)
         
         if not result:
             continue
@@ -236,8 +255,6 @@ def main(base="."):
         log.debug("    Writing result to: %s", document.target)
         with open(os.path.join(base, '_html', document.target), 'w') as fh:
             fh.write(result)
-        
-    
 
 
 if __name__ == '__main__':

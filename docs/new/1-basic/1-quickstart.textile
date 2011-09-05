@@ -1,1 +1,286 @@
 h1. Creating a new Web Application
+
+WebCore was designed from the ground up to be as flexible as possible without restricting the more advanced features to the more advanced ways of building applications.  All features of the framework are available in the simplest of applications.
+
+There are four primary methods of organizing your application based on size and complexity.  As your needs evolve over time it is straight-forward to migrate to the more formal structures.
+
+"Single File Applications":#single:
+    The simplest to get started with, you will end up with a single Python source file which you directly execute to start a web server.  You can also deploy this type of application under systems like "mod_wsgi":mod-wsgi fairly easily.  Once you have more than a few hundred lines of code this model you should migrate to...
+"Multiple File Applications":#multiple:
+    Like single-file applications this is where you begin to organize your application into discrete Python modules.  Once you need to distribute your application you should migrate to...
+"Packaged Applications":#packaged:
+    These are installable Python packages, usually organized into a more formal model/view/controller structure.
+"Component Applications":#component:
+    This takes a packaged application and adds an additional top level organization, with multiple sets of model/view/controller components.
+
+
+h2(#single). Single File Applications
+
+A single file application is best demonstrated with an example.  Create a new file, @hello.py@, in your virtual environment and enter the following:
+
+code.
+import web.core
+ 
+ 
+class RootController(web.core.Controller):
+    def index(self):
+        return 'Welcome, program.'
+ 
+ 
+if __name__ == '__main__':
+    import logging
+    from paste import httpserver
+    
+    logging.basicConfig(level=logging.INFO)
+    
+    app = web.core.Application.factory(root=RootController, **{
+           'debug': True,
+           'web.sessions': False,
+           'web.static': False
+       })
+    
+    httpserver.serve(app, host='127.0.0.1', port='8080')
+
+After saving you can then run the application from a command prompt:
+
+code(lang-bsh). (core)$ python hello.py
+
+You should see output similar to:
+
+pre.
+INFO:web.core.application:factory:Preparing WebCore WSGI middleware stack.
+INFO:web.core.application:factory:WebCore WSGI middleware stack ready.
+serving on http://127.0.0.1:8080
+
+Now open up a web browser to the "URL given on the last line":http://127.0.0.1:8080.  Welcome, program!
+
+h3. Explanation
+
+We'll now go through the above file and describe what each block of code actually does, and why it's there.
+
+First we import the @web.core@ package into our own.  This gives is access to the contents of @web.core@.
+
+code. import web.core
+
+We then define a controller class. The Controller class defines the object-dispatch behaviour most applications will use.  It allows you to quickly prototype your application's structure without having to worry about decorators, regular expression URL mapping, or any of the nitty-gritty details most other frameworks require.
+
+code.
+class RootController(web.core.Controller):
+   def index(self):
+       return 'Hello, program.'
+
+This is our root controller.  It defines a single method, index, which is called if no other method is given in the URL.  It returns the plain string "Hello, program." to the web browser.
+
+code.
+if __name__ == '__main__':
+   import logging
+   from paste import httpserver
+
+If this script is run as a Python application from the command line (rather than imported by another script) code within this block is run.  First we import a few useful modules for us to configure.
+
+code. logging.basicConfig(level=logging.INFO)
+
+This sets the Python logging level to INFO.  The DEBUG level is useful if you are trying to diagnose a problem, but the output is very verbose.
+
+code.
+app = Application.factory(root=RootController, **{
+       'debug': True,
+       'web.sessions': False,
+       'web.static': False
+   })
+
+Here we tell WebCore which controller to use as the root and the options we want to use.  Because we don't need persistent sessions or static file serving in this example, we disable these features.  (Static file serving is normally on when run with debugging enabled.)
+
+code.
+httpserver.serve(app, host='127.0.0.1', port='8080')
+
+This starts a web server on the loopback interface, port 8080.
+
+
+h2(#multiple). Multiple File Applications
+
+If you have a single file that combines your model and controllers, possibly your templates as well, and things start looking out of hand -- or you simply want to avoid that situation -- you can split your file into multiple ones, then _import_ objects as needed.
+
+A standard organization would be:
+
+@application.py@:
+    Contains the "ifmain" section and application configuration.
+@controllers.py@:
+    Contains one or more controller classes.
+@model.py@:
+    Contains your data model.
+@templates/@:
+    A folder containing your templates.
+
+If you need access to part of your model in your @controllers.py@ file, you can import it:
+
+code. from model import MyModelClass
+
+Once you start needing to split up your controllers into separate files it becomes advisable to create a package to encapsulate your work, prevent clutter, and prevent confusion -- yours _and_ Python's.
+
+
+h2(#packaged). Packaged Applications
+
+Packaged applications benefit from generally being more structured, better organized, and can be packaged and deployed more easily.  Packaged applications can also utilize INI-based configuration.
+
+At the top level we suggest the following structure:
+
+@docs/@ _optional_:
+    A folder to contain documentation.
+@tests/@ _optional, but recommended_:
+    A folder to contain automated unit tests.
+@_project_/@:
+    A folder that represents the name of your project.
+@development.ini@:
+    A configuration file for running your application in development mode.
+@README@:
+    Some light-weight documentation for your project. Use a filename extension representative of the text format, e.g. @.textile@ or @.rst@.
+@LICENSE@:
+    The full text of the license for your project.
+@setup.py@:
+    Your package configuration file.
+
+h3. Project Package
+
+Inside the folder named after your project, we suggest the following structure:
+
+@controllers/@:
+    A package for controller modules, usually containing one named @root.py@ to contain your application root.
+@model/@:
+    A package for data and business logic models.
+@templates/@:
+    A folder (or package) to contain reusable template files.
+@public/@:
+    A folder containing static resources such as CSS, images, and JavaScript.
+@__init__.py@:
+    This marks this folder as a Python package.
+
+h3. Setup
+
+The following is a minimal package configuration.  Fill out the details as appropriate for your project.  For a full description of the options available please refer to the "Distribute documentation":http://packages.python.org/distribute/setuptools.html.
+
+code.
+#!/usr/bin/env python
+# encoding: utf-8
+ 
+import sys, os
+from setuptools import setup, find_packages
+ 
+setup(
+        name = "YourProject",
+        version = "0.1",
+        install_requires = [
+                'WebCore < 2.0',
+                # Add your own dependancies here.
+            ],
+        packages = find_packages(),
+        include_package_data = True,
+        package_data = {
+                '': ['README', 'LICENSE'],
+                '_project_': ['templates/*']
+            },
+        paster_plugins = ['PasteScript', 'WebCore']
+    )
+
+Once you are satisfied with your package's metadata you can install your application for development by running it in Python.  If you mark your @setup.py@ script as executable you can call it directly.
+
+code. python setup.py develop
+
+This will register your package in the virtual environment (adding it to the Python search path) and automatically pull in and install any of the dependancies you have defined.  This needs to be done to allow WebCore to find the root controller you configure in the next step as well as for WebCore to find the templates you wish to use.
+
+h3. Development Configuration
+
+The @development.ini@ file contains configuration directives that control how your application is run, and what options are passed to WebCore to configure your application's environment.  What follows is a minimal configuration, based on the settings from the "Single File Applications":#single example.
+
+code(lang-ini).
+#!/usr/bin/env paster
+ 
+[exe]
+command = serve
+reload = True
+ 
+[server:main]
+use = egg:Paste#http
+host = 127.0.0.1
+port = 8080
+ 
+[app:main]
+use = egg:WebCore
+debug = True
+web.root = blog.controllers:RootController
+web.sessions = False
+web.static = False
+ 
+[loggers]
+keys = root, webcore, _project_
+ 
+[handlers]
+keys = console
+ 
+[formatters]
+keys = generic
+ 
+[logger_root]
+level = WARN
+handlers = console
+ 
+[logger_webcore]
+level = INFO
+handlers = console
+qualname = web
+propagate = 0
+ 
+[logger__project_]
+level = DEBUG
+handlers = console
+qualname = _project_
+propagate = 0
+ 
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+ 
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s] %(message)s
+
+The @[server:main]@ section replicates the functionality of the @httpserver@ line and the @[app:main]@ section replicates the options passed to @Application.factory@.
+
+h4. Explanation
+
+We'll step through each section of this INI file up to the @[logging]@ section.  Logging configuration is covered by Python's documentation on the "fileConfig":python.function.logging.config.fileConfig function and later "Configuration File Format" section.
+
+code. #!/usr/bin/env paster
+
+This allows you to set the INI file as executable (@chmod +x development.ini@ on UNIX derivatives) and run it from the shell as if it were an executable script.
+
+code.
+[exe]
+command = serve
+reload = True
+
+This tells the @paster@ command what to do when running executing script directly.  By default we enable file modification detection which triggers your application to automatically restart -- very useful during development!
+
+code.
+[server:main]
+use = egg:Paste#http
+host = 127.0.0.1
+port = 8080
+
+As per the single file example, this tells the Paste HTTP server to bind to the loopback address and serve requests on port 8080.
+
+code.
+[app:main]
+use = egg:WebCore
+debug = True
+web.root = blog.controllers:RootController
+web.sessions = False
+web.static = False
+
+This tells @paster@ to load the WebCore application and pass in the remaining values as configuration values.
+
+
+h2(#component). Component Applications
+
+Component applications are generally constructed, as the name implies, from multiple separate components.  Instead of having @controllers@, @model@, at @templates@ folders within your top-level project package, create sub-packages and replicate this structure in each, once for each component.

@@ -301,15 +301,18 @@ li ol {
 }
 
 dl {
-  margin: 0 0 10px 0;
+  margin: 0;
 }
 
 dl dt {
   font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 dl dd {
-  margin-left: 1.5em;
+  margin-left: 15px;
+  margin-bottom: 10px;
 }
 
 table {
@@ -415,9 +418,6 @@ header {
     background: linear-gradient(top, #1F4370 0%,#122338 100%);
     
     border-bottom: 1px solid #1F4370;
-    position: fixed;
-    width: 100%;
-    
     color: white;
     font: normal normal 200 1.3em/normal 'Helvetica Neue', 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
     text-shadow: 0 1px 2px black;
@@ -477,7 +477,6 @@ header nav menu li a:hover {
 
 
 nav#breadcrumb {
-    padding-top: 2.85em;
     background: rgb(206,220,231);
     background: -moz-linear-gradient(top, rgba(206,220,231,1) 0%, rgba(89,106,114,1) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(206,220,231,1)), color-stop(100%,rgba(89,106,114,1)));

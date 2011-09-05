@@ -14,6 +14,13 @@ WebCore features out-of-the-box support for the following low-level features com
 
 No single set of components is enforced by WebCore; for the most part all dependancies are declared by your application, not the framework.
 
+h2. Marrow
+
+WebCore is a member of the "Marrow Project":marrow group of packages and is maintained by several core developers.  WebCore thus adheres to the "Python style guidelines":marrow-style, "development workflow":marrow-development, and "Zen":marrow-zen, as well as the "release cycle guidelines":marrow-release published by this group.
+
+
+h2. Example
+
 As a demonstration, the smallest WebCore application is a single file.  Its entirety is as follows:
 
 code.
