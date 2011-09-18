@@ -184,7 +184,6 @@ h3 {
 h4 {
   font-size: 1.2em;
   line-height: 1.25;
-/*  margin-bottom: 10px;*/
 }
 
 h5 {
@@ -223,9 +222,66 @@ a:focus {
 }
 
 blockquote {
-  margin: 1.5em;
+  margin: 10px 0;
   color: #666666;
   font-style: italic;
+  border-left: 5px solid #ccc;
+  border-right: 5px solid #ccc;
+  padding: 10px 20px;
+  line-height: 1.2;
+}
+
+blockquote:before {
+    font-weight: bold;
+}
+
+blockquote.note:before {
+    content: 'Note: ';
+}
+
+blockquote.caution {
+    border-color: #DA8300;
+}
+
+blockquote.caution:before {
+    content: 'Caution: ';
+    color: #DA8300;
+}
+
+blockquote.warning {
+    border-color: #C50200;
+}
+
+blockquote.warning:before {
+    content: 'Warning! ';
+    color: #C50200;
+}
+
+blockquote.new {
+    border-color: #0a5;
+    font-weight: bold;
+}
+
+blockquote.new:before {
+    content: 'New in version: ';
+    font-weight: normal;
+}
+
+blockquote.footnote {
+    margin-top: 20px;
+}
+
+blockquote.footnote + blockquote.footnote {
+    margin-top: 10px;
+}
+
+blockquote p {
+    margin: 0;
+    padding: 0;
+}
+
+blockquote p + p {
+    margin-top: 10px;
 }
 
 strong,
@@ -268,7 +324,7 @@ tt {
   font: 1em 'monofur', 'andale mono', 'lucida console', monospace;
   line-height: 1.2;
   font-size: 1.2em;
-  background: #eee;
+  background: #f6f6f6;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
@@ -576,35 +632,6 @@ nav.children ol li {
 
 
 
-blockquote {
-    border-left: 5px solid #ccc;
-    border-right: 5px solid #ccc;
-    padding: 10px 20px;
-    margin-left: 0;
-    margin-right: 0;
-    line-height: 1.2;
-}
-
-blockquote.note { }
-blockquote.note:before { content: 'Note: '; font-weight: bold; }
-blockquote.caution { border-color: #DA8300; }
-blockquote.caution:before { content: 'Caution: '; color: #DA8300; font-weight: bold; }
-blockquote.warning { border-color: #C50200; }
-blockquote.warning:before { content: 'Warning! '; color: #C50200;  font-weight: bold; }
-
-
-blockquote.footnote {
-    margin-top: 20px;
-}
-
-blockquote.footnote + blockquote.footnote {
-    margin-top: 10px;
-}
-
-blockquote p {
-    margin: 0;
-    padding: 0;
-}
 
 
 nav.vcr, footer {

@@ -1,1 +1,73 @@
 h1. Database Connectivity
+
+Databases are one of the most common web application requirements, and WebCore has very flexible and light-weight database support.  This support extends to making multiple simultaneous connections to different databases.
+
+bq(caution). Multiple database connections are independent from each other and should not share model modules.
+
+h3. Sections
+
+"Configuring Database Connections":#configuration:
+    Basic configuration directives common to all database deployments.
+"Models in Large Applications":#large
+    Growing applications may require some restructuring.
+"Connecting PyMongo":#pymongo:
+    "MongoDB":mongo is an extremely powerful, efficient, and capable schemaless no-SQL database with excellent Python support.
+"Connecting MongoEngine":#mongoenigne:
+    "MongoEngine":http://www.mongoengine.org/ extends pymongo with a feature complete ODM(Object Document Mapper) and schema system.
+"Connecting SQLAlchemy":#sqlalchemy:
+    Lorem ipsum.
+
+h3. See Also
+
+* "Extending WebCore with Database Adapters":/advanced/db.html
+
+
+h2(#configuration). Configuring Database Connections
+
+To utilize database connections from within your application you will need two things: a configuration and a model module (or package).  Database configuration directives are prefixed by @db.@ and each database-specific configuration is also prefixed a name assigned by you.
+
+h4. Core Directives
+
+@db.connections@:
+    A comma-separated list (or true list) of database connections, e.g. @core, legacy@. The names used here are used as the prefix for the database-specific configurations.
+@db.[name].engine@:
+    The name of a database engine entry point or a dot-colon path to a database engine object.  If configuring your application in Python, you can simply pass a database engine object directly.
+@db.[name].model@:
+    A dot-notation module path to your model, or, if configured within Python, the imported module object.  Individual engines may have requirements about what needs to be in that module.
+@db.[name].url@:
+    The database connection string.  The protocol is dependant on the database engine in use.  Usually of the form @protocol://user:pass\@host/db@.
+
+
+h2(#large). Models in Large Applications
+
+If your application has a large number of model structures, you may want to split your model into several different modules. In that case, you should turn your model module into a package instead.  You can do this by creating a folder called @model@, moving your @model.py@ file into this folder and re-naming it to @__init__.py@ (marking, to Python, the fact that this folder is a "package"), then factoring out the larger data structures into their own modules contained within this package.
+
+Individual engines may have additional notes on the best methodology for organizing your models in this way.
+
+
+h2(#pymongo). Connecting PyMongo
+
+To use it, declare a new database connection using the @mongo@ engine and the core directives (@engine@, @model@, and @url@) using @mongo://@ as the protocol for your connection string.
+
+Your model module, after initialization, will contain a @db@ object (a pyMongo Database object) and may optionally contain a @prepare@ function which will be called after initialization.  You can use this callback to populate Collection objects, ensure indexes, populate stock data, etc.  For example:
+
+code.
+db = None
+ 
+users = None
+wiki = None
+history = None
+ 
+def prepare():
+    global users, wiki, history
+    users, wiki, history = db.users, db.wiki, db.history
+
+
+h2(#mongoengine). Connecting MongoEngine
+
+bq(new). 1.1.0
+
+
+h2(#sqlalchemy). Connecting SQLAlchemy
+
+bq(note). Two-phase transactions are currently not supported. This will be rectified in a future version of WebCore.
