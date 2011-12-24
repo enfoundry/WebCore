@@ -8,7 +8,6 @@ import web.core
 from web.core import Controller, url
 
 
-
 class Child(Controller):
     def index(self):
         return url.compose('delete', confirm="yes")
@@ -37,7 +36,6 @@ class RootController(Controller):
         return url() + '\n' + url.compose(path)
     
     child = Children()
-
 
 
 if __name__ == '__main__':

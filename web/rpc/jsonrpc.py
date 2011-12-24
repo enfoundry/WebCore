@@ -4,10 +4,10 @@
 
 import web.core
 
+from marrow.util.compat import exception
 from web.core import Dialect
 from web.core.http import HTTPBadRequest, HTTPMethodNotAllowed
 from web.rpc import route
-from marrow.util.compat import exception
 
 try:
     from simplejson import loads

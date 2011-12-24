@@ -10,6 +10,7 @@ from sqlalchemy import engine_from_config, event
 from sqlalchemy.orm import sessionmaker
 from marrow.util.convert import boolean
 from marrow.util.object import load_object
+from marrow.util.compat import basestring
 
 
 __all__ = ['SQLAlchemyMiddleware']

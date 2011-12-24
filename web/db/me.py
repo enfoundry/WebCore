@@ -6,6 +6,8 @@ import re
 import warnings
 import mongoengine
 
+from marrow.util.compat import basestring
+
 
 __all__ = ['MongoEngineMiddleware']
 log = __import__('logging').getLogger(__name__)
@@ -30,7 +32,7 @@ def MongoEngineMiddleware(application, prefix, model, session=None, **config):
     connection['host'], connection['port'] = host.split(':') if ':' in host else (host, '27017')
     connection['port'] = int(connection['port'])
     
-    if auth: # pragma: no cover
+    if auth:  # pragma: no cover
         connection['username'], _, connection['password'] = auth.partition(':')
     
     log.debug("Connecting to %s database with connection information: %r", db, connection)

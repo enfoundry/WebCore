@@ -1,7 +1,6 @@
 # encoding: utf-8
 # pragma: no cover
 
-import re
 import warnings
 
 from marrow.util.text import normalize, ellipsis
@@ -20,7 +19,6 @@ class CStringIO(object):
     def __init__(self, *a, **kw):
         try:
             from cStringIO import StringIO
-        
         except ImportError:
             from StringIO import StringIO
         

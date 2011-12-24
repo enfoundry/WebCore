@@ -2,15 +2,17 @@
 
 """A basic XML-RPC Dialect class."""
 
-import xmlrpclib
-
 import web
 
 from marrow.util.bunch import Bunch
 from marrow.util.object import getargspec
-
 from web.core.http import HTTPLengthRequired, HTTPRequestEntityTooLarge
 from web.rpc import route, RoutingError
+
+try:
+    from xmlrpc import client
+except ImportError:
+    import xmlrpclib as client
 
 
 __all__ = ['XMLRPCController']
@@ -46,9 +48,9 @@ class XMLRPCController(web.core.Dialect):
 
         log.debug("Encountered fault: %d %s", *fault)
 
-        fault = xmlrpclib.Fault(fault[0], fault[1])
+        fault = client.Fault(fault[0], fault[1])
         web.core.response.content_type = 'text/xml'
-        return xmlrpclib.dumps(fault, methodresponse=True)
+        return client.dumps(fault, methodresponse=True)
 
     def _response(self, value):
         """Return a formatted XML-RPC response."""
@@ -56,7 +58,7 @@ class XMLRPCController(web.core.Dialect):
         log.debug("Got result: %r", value[0])
 
         try:
-            value = xmlrpclib.dumps(value, methodresponse=True, allow_none=self.__allow_none__)
+            value = client.dumps(value, methodresponse=True, allow_none=self.__allow_none__)
         except:
             return self._fault(fault.other.application)
 
@@ -79,7 +81,7 @@ class XMLRPCController(web.core.Dialect):
             raise HTTPRequestEntityTooLarge("XML body too large.")
 
         try:
-            args, method = xmlrpclib.loads(request.body, True)
+            args, method = client.loads(request.body, True)
         except:
             return self._fault(fault.parse.badly_formed)
 

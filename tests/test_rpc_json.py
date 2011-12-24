@@ -1,9 +1,7 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
-import web
-
-from unittest import TestCase
-from webob import Request, Response
+from webob import Request
 from web.core import Application
 from web.rpc.jsonrpc import JSONRPCController
 from common import WebTestCase
@@ -82,12 +80,12 @@ class TestJSONRPC(WebTestCase):
         self.assertRPCResponse('add', dict(foo="bar"), status='400 Bad Request', content_type='text/plain')
     
     def test_bad_json_input(self):
-        request = Request.blank('/', method="POST", body="[foo")
+        request = Request.blank('/', method="POST", body=b"[foo")
         response = request.get_response(self.app)
         self.assertEqual((response.status, response.content_type), ('400 Bad Request', 'text/plain'))
     
     def test_missing_json_input(self):
-        request = Request.blank('/', method="POST", body="{}")
+        request = Request.blank('/', method="POST", body=b"{}")
         response = request.get_response(self.app)
         self.assertEqual((response.status, response.content_type), ('400 Bad Request', 'text/plain'))
     

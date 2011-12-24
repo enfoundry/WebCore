@@ -1,13 +1,11 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 from unittest import TestCase
 from nose.tools import raises
-
-import web
-from web.core import Application
-from web.core.middleware import registry, defaultbool, MiddlewareWrapper, middleware, database, sessions
-
+from web.core.middleware import defaultbool, MiddlewareWrapper, database, sessions
 from common import PlainController
+import sys
 
 
 test_config = {
@@ -22,7 +20,6 @@ test_config = {
         'web.static': True,
         'web.static.path': '/tmp'
     }
-
 
 
 class RootController(PlainController):
@@ -63,7 +60,8 @@ class TestMiddlewareHelpers(TestCase):
         
         w = MiddlewareWrapper(Inner(), 'foo', "bob")
         
-        self.assertEqual(repr(w), "Wrapper(foo, 'bob') for bar")
+        expected = "Wrapper(foo, 'bob') for bar" if str is unicode else "Wrapper(foo, u'bob') for bar"
+        self.assertEqual(repr(w), expected)
         self.assertEqual(w(), 27)
 
 

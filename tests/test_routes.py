@@ -1,14 +1,15 @@
 # encoding: utf-8
-
-from common import WebTestCase
+from __future__ import unicode_literals
 
 from web.core.dialects.routing import RoutingController
 from web.core import Application
+from common import WebTestCase
 
 
 class BarController(object):
     def error(self, foo):
         return "sub"
+
 
 class RootController(RoutingController):
     def __init__(self):

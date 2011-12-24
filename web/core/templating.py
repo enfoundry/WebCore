@@ -3,9 +3,8 @@
 import os
 
 from functools import wraps
-
 from marrow.templating.core import Engines
-
+from marrow.util.compat import basestring, unicode
 from web.core import request, response
 
 
@@ -97,9 +96,9 @@ class TemplatingMiddleware(object):
             raise TypeError("Invalid tuple values returned to TemplatingMiddleware.")
 
         response.content_type, output = render(template, data, **extras)
-        if isinstance(output, str):
+        if isinstance(output, unicode):
+            response.text = output
+        elif isinstance(output, bytes):
             response.body = output
-        elif isinstance(output, unicode):
-            response.unicode_body = output
 
         return response(environ, start_response)

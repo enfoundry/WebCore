@@ -11,6 +11,8 @@ import web
 
 from marrow.util.convert import boolean, array, integer
 from marrow.util.object import load_object
+from marrow.util.compat import basestring
+from webob.compat import iteritems_
 
 
 log = __import__('logging').getLogger(__name__)
@@ -184,7 +186,7 @@ def sessions(app, config):
                 'session.key': "session"
             }
         
-        for i, j in config.iteritems():
+        for i, j in iteritems_(config):
             if i.startswith('web.sessions.'):
                 beakerconfig['session.' + i[13:]] = j
         
@@ -219,7 +221,7 @@ def caching(app, config):
                 'cache.type': "file"
             }
         
-        for i, j in config.iteritems():
+        for i, j in iteritems_(config):
             if i.startswith('web.cache.'):
                 beakerconfig['cache.' + i[10:]] = j
         
@@ -237,7 +239,7 @@ def debugging(app, config):
     try:
         localconfig = dict(debug=config.get('debug', False))
         
-        for i, j in config.iteritems():
+        for i, j in iteritems_(config):
             if i.startswith('debug.'):
                 localconfig[i[6:]] = j
         

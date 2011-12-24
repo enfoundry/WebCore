@@ -6,7 +6,12 @@ import web
 from marrow.util.bunch import Bunch
 from marrow.util.convert import boolean, array
 from marrow.util.object import load_object
+from webob.compat import iteritems_
 
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    from urllib import quote_plus
 
 __all__ = ['WebAuth', 'BasicAuthMiddleware']
 log = __import__('logging').getLogger(__name__)
@@ -28,7 +33,7 @@ class WebAuth(object):
         prefix_length = len(prefix)
         our_config = Bunch(default_config.copy())
         
-        for i, j in config.iteritems():
+        for i, j in iteritems_(config):
             if i.startswith(prefix):
                 our_config[i[prefix_length:]] = j
         
@@ -74,8 +79,8 @@ class WebAuth(object):
     def authenticate(self, environ, start_response):
         raise web.core.http.HTTPTemporaryRedirect(location=\
                 web.auth.config.handler + '?redirect=' + \
-                urllib.quote_plus(environ['SCRIPT_NAME']) + \
-                urllib.quote_plus(environ['PATH_INFO'])
+                quote_plus(environ['SCRIPT_NAME']) + \
+                quote_plus(environ['PATH_INFO'])
             )
     
     def __call__(self, environ, start_response):
@@ -87,7 +92,7 @@ class WebAuth(object):
             session[config.name] = None
             session.save()
         
-        if environ.has_key('paste.registry'):
+        if 'paste.registry' in environ:
             environ['paste.registry'].register(
                     web.auth.user,
                     config.lookup(session[config.name]) if session[config.name] else None
@@ -101,7 +106,7 @@ class WebAuth(object):
         
         try:
             result = self.application(environ, our_start_response)
-        except web.core.http.HTTPException, e:
+        except web.core.http.HTTPException as e:
             return e(environ, start_response)
         
         return result

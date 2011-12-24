@@ -1,14 +1,11 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 import warnings
-
-from webob import Request
-
 import web
+
 from web.core import Application, HTTPMethod, RESTMethod
-
 from common import PlainController, WebTestCase
-
 
 
 class Hello(HTTPMethod):

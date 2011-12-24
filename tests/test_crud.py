@@ -1,12 +1,7 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
-from unittest import TestCase
-
-from webob import Request
-
-import web
-from web.core import Application, Controller
-
+from web.core import Application
 from common import PlainController, WebTestCase
 
 

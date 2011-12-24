@@ -2,7 +2,7 @@
 
 """Basic dispatch routing."""
 
-from api import Dialect
+from web.core.dialects.api import Dialect
 from web.core.http import HTTPNotImplemented
 
 

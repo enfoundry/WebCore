@@ -12,8 +12,9 @@ __all__ = [
 
 
 class Predicate(object):
-    def __nonzero__(self):
+    def __bool__(self):
         raise NotImplementedError('Subclasses override this method.')
+    __nonzero__ = __bool__
 
 
 class CustomPredicate(Predicate):
@@ -27,8 +28,9 @@ class CustomPredicate(Predicate):
         super(CustomPredicate, self).__init__()
         self.conditional = conditional
     
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.conditional(web.auth.user, web.core.request))
+    __nonzero__ = __bool__
 
 
 class Not(Predicate):
@@ -41,8 +43,9 @@ class Not(Predicate):
         super(Not, self).__init__()
         self.arg = arg
     
-    def __nonzero__(self):
+    def __bool__(self):
         return not bool(self.arg)
+    __nonzero__ = __bool__
 
 
 class All(Predicate):
@@ -57,8 +60,9 @@ class All(Predicate):
         super(All, self).__init__()
         self.args = args
     
-    def __nonzero__(self):
+    def __bool__(self):
         return all(self.args)
+    __nonzero__ = __bool__
 
 
 class Any(Predicate):
@@ -73,8 +77,9 @@ class Any(Predicate):
         super(Any, self).__init__()
         self.args = args
     
-    def __nonzero__(self):
+    def __bool__(self):
         return any(self.args)
+    __nonzero__ = __bool__
 
 
 class Always(Predicate):
@@ -83,8 +88,9 @@ class Always(Predicate):
     Included for completeness sake.
     """
     
-    def __nonzero__(self):
+    def __bool__(self):
         return True
+    __nonzero__ = __bool__
 
 always = Always()
 
@@ -95,8 +101,9 @@ class Never(Predicate):
     Included for completeness sake.
     """
     
-    def __nonzero__(self):
+    def __bool__(self):
         return False
+    __nonzero__ = __bool__
 
 never = Never()
 
@@ -104,8 +111,9 @@ never = Never()
 class Anonymous(Predicate):
     """True if no user is currently logged in."""
     
-    def __nonzero__(self):
+    def __bool__(self):
         return web.auth.user is None or web.auth.user._current_obj() is None
+    __nonzero__ = __bool__
 
 anonymous = Anonymous()
 
@@ -113,8 +121,9 @@ anonymous = Anonymous()
 class Authenticated(Predicate):
     """True if a user is currently logged in."""
     
-    def __nonzero__(self):
+    def __bool__(self):
         return web.auth.user is not None and web.auth.user._current_obj() is not None
+    __nonzero__ = __bool__
 
 authenticated = Authenticated()
 
@@ -134,8 +143,9 @@ class AttrIn(Predicate):
         self.attr = attr
         self.values = values if isinstance(values, list) else [values]
     
-    def __nonzero__(self):
+    def __bool__(self):
         return getattr(web.auth.user, self.attr, None) in self.values
+    __nonzero__ = __bool__
     
     @classmethod
     def partial(cls, attr):
@@ -162,8 +172,9 @@ class ValueIn(Predicate):
         self.value = value
         self.attr = attr
     
-    def __nonzero__(self):
+    def __bool__(self):
         return self.value in getattr(web.auth.user, self.attr, [])
+    __nonzero__ = __bool__
     
     @classmethod
     def partial(cls, attr):
@@ -189,8 +200,9 @@ class EnvironIn(Predicate):
         self.key = key
         self.values = values if isinstance(values, list) else [values]
     
-    def __nonzero__(self):
+    def __bool__(self):
         return web.core.request.environ.get(self.key, None) in self.values
+    __nonzero__ = __bool__
     
     @classmethod
     def partial(cls, attr):

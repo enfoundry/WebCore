@@ -1,16 +1,15 @@
 # encoding: utf-8
-from unittest import TestCase
+from __future__ import unicode_literals
 
 import web.core
 import web.auth
+
+from unittest import TestCase
+from marrow.util.bunch import Bunch
+from paste.registry import StackedObjectProxy
 from web.core import Application
 from web.auth.middleware import WebAuth
-from marrow.util.bunch import Bunch
-
-from paste.registry import StackedObjectProxy
-
 from common import PlainController, WebTestCase
-
 
 
 users = {'amcgregor': {'name': 'Alice Bevan-McGregor', 'pass': 'foo'}}

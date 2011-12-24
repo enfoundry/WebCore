@@ -1,13 +1,15 @@
 # encoding: utf-8
 
-import xmlrpclib
-
 from webob import Request
 
 from web.core import Application
 from web.rpc.xml import XMLRPCController
 from common import WebTestCase
 
+try:
+    from xmlrpc import client
+except ImportError:
+    import xmlrpclib as client
 
 test_config = {'debug': False, 'web.widgets': False, 'web.compress': False, 'web.static': False}
 
@@ -42,7 +44,7 @@ class TestXMLRPC(WebTestCase):
 
     def assertRPCResponse(self, method, params=[], path='/', status='200 OK', content_type='text/xml', **kw):
         request = Request.blank(path, method="POST")
-        request.body = xmlrpclib.dumps(tuple(params), method)
+        request.body = client.dumps(tuple(params), method)
 
         response = request.get_response(self.app)
 
@@ -54,8 +56,8 @@ class TestXMLRPC(WebTestCase):
         data = None
 
         try:
-            data = xmlrpclib.loads(response.body)
-        except Exception, e:
+            data = client.loads(response.body)
+        except Exception as e:
             return response, e
 
         return response, data
@@ -102,10 +104,10 @@ class TestXMLRPC(WebTestCase):
         request = Request.blank('/', method="POST", body="<foo")
         response = request.get_response(self.app)
 
-        with self.assertRaises(xmlrpclib.Fault):
+        with self.assertRaises(client.Fault):
             try:
-                data = xmlrpclib.loads(response.body)
-            except Exception, e:
+                data = client.loads(response.body)
+            except Exception as e:
                 raise
 
         self.assertEquals(repr(e), "<Fault -32700: 'Not well formed.'>")

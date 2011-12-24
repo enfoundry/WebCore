@@ -1,10 +1,9 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 from unittest import TestCase
-
-from webob import Request
 from nose.tools import raises, eq_
-
+from webob import Request
 from web.core import Application, Controller
 from web.core.templating import template
 from web.core import templating
@@ -29,7 +28,7 @@ class RootController(Controller):
         return 'templates.unicode', dict(), {'genshi.default_encoding': None}
     
     def unicode_template(self):
-        return u'templates.test', dict()
+        return 'templates.test', dict()
     
     def unicode_mako(self):
         return 'mako:templates.unicode_mako', dict()
@@ -86,7 +85,7 @@ class TestTemplates(TestCase):
         eq_(response.status, "200 OK")
         eq_(response.content_type, "text/html")
         eq_(response.charset, "UTF-8")
-        assert response.unicode_body == u'<html xmlns="http://www.w3.org/1999/xhtml"><body><h1>© 2009</h1></body></html>'
+        assert response.text == u'<html xmlns="http://www.w3.org/1999/xhtml"><body><h1>© 2009</h1></body></html>'
         
     def test_unicode_template(self):
         response = Request.blank('/unicode_template').get_response(self.app)
@@ -103,7 +102,7 @@ class TestTemplates(TestCase):
         eq_(response.status, "200 OK")
         eq_(response.content_type, "text/html")
         eq_(response.charset, "UTF-8")
-        eq_(response.unicode_body, u'<html><body><h1>© 2009</h1></body></html>')
+        eq_(response.text, u'<html><body><h1>© 2009</h1></body></html>')
 
     def test_template_globals(self):
         response = Request.blank('/variables').get_response(self.app)

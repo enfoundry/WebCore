@@ -1,10 +1,10 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 import pyamf
 import pyamf.remoting
 
 from webob import Request
-
 from web.core import Application
 from web.rpc.amf import AMFController
 from common import WebTestCase

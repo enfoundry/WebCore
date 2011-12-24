@@ -1,21 +1,19 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 from unittest import TestCase, skip
 
 try:
     import pymongo
     from pymongo.errors import ConnectionFailure
-
 except ImportError:
     skip("PyMongo not available; skipping tests which rely on it.")
 
 
 try:
     connection = pymongo.Connection()
-    
 except ConnectionFailure:
     skip("Could not connect to local MongoDB server; skipping tests which rely on it.")
-
 else:
     connection.disconnect()
 
@@ -40,7 +38,6 @@ class TestMongo(TestCase):
     def setUpClass(cls):
         try:
             from web.db.mongo import MongoMiddleware
-        
         except ImportError:
             skip("PyMongo not available; skipping MongoDB tests.")
         
@@ -76,7 +73,6 @@ class TestMongoEngine(TestCase):
     def setUpClass(cls):
         try:
             from web.db.me import MongoEngineMiddleware
-        
         except ImportError:
             skip("MongoEngine not available; skipping MongoEngine tests.")
         

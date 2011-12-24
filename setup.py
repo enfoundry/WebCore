@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys, os
+import sys
+import os
 
 try:
     from setuptools import setup, find_packages
 
 except ImportError:
-    print "You do not seem to have distribute or setuptools installed."
-    print "WebCore requires functionality from one of these packages."
-    print "We recommend installing distribute:\n\
-        http://pypi.python.org/pypi/distribute#installation-instructions\n"
+    print("You do not seem to have distribute or setuptools installed.")
+    print("WebCore requires functionality from one of these packages.")
+    print("We recommend installing distribute:\n\
+        http://pypi.python.org/pypi/distribute#installation-instructions\n")
     
     raise
 
@@ -18,7 +19,7 @@ except ImportError:
 if sys.version_info <= (2, 5):
     raise SystemExit("Python 2.5 or later is required.")
 
-execfile(os.path.join("web", "release.py"))
+exec(open(os.path.join("web", "release.py")).read())
 
 
 
@@ -39,9 +40,9 @@ setup(
                 'Paste',
                 'PasteDeploy',
                 'PasteScript',
-                'WebOb',
+                'WebOb >= 1.2b2',
                 'WebError',
-                'marrow.util < 1.3',
+                'marrow.util >= 1.2.1, < 1.3',
                 'marrow.templating'
             ],
         

@@ -1,12 +1,11 @@
 # encoding: utf-8
-
-from unittest import TestCase
-
-from webob import Response
+from __future__ import unicode_literals
 
 import web
-from web.core import Application
 
+from unittest import TestCase
+from webob import Response
+from web.core import Application
 from common import PlainController, WebTestCase
 
 
@@ -51,14 +50,14 @@ class RootController(PlainController):
         return "got %s" % (foo,)
 
     def unicode(self):
-        return u"Unicode text."
+        return "Unicode text."
 
     def abnormal(self):
         return ['it works']
 
     def yields(self):
-        yield 'this works '
-        yield 'too'
+        yield b'this works '
+        yield b'too'
 
     def _private(self):
         return "no method for you"
@@ -93,7 +92,7 @@ class TestBasicDispatch(WebTestCase):
         self.assertPostResponse('/arg', dict(foo='diz'), body="got diz")
 
     def test_unicode(self):
-        self.assertResponse('/unicode', unicode_body=u"Unicode text.", charset='UTF-8')
+        self.assertResponse('/unicode', text="Unicode text.", charset='UTF-8')
 
     def test_nested(self):
         self.assertResponse('/nested/', body="success")

@@ -1,24 +1,18 @@
 # encoding: utf-8
-
-from unittest import TestCase
-
-from webob import Request
-from paste.registry import StackedObjectProxy
+from __future__ import unicode_literals
 
 import web
-from web.core import Application, Controller, request
-
-from common import PlainController, WebTestCase
 
 from sqlalchemy import Column, Unicode
 from sqlalchemy.ext.declarative import declarative_base
-
+from paste.registry import StackedObjectProxy
+from web.core import Application
+from common import PlainController, WebTestCase
 
 
 Base = declarative_base()
 metadata = Base.metadata
 session = StackedObjectProxy()
-
 
 
 class Foo(Base):
@@ -80,7 +74,7 @@ class RootController(PlainController):
         return "ok"
     
     def load(self, name, die=False):
-        o = session.query(Foo).filter_by(name=unicode(name)).one()
+        session.query(Foo).filter_by(name=unicode(name)).one()
         
         if die: raise getattr(web.core.http, die)()
         return "ok"
@@ -93,7 +87,7 @@ class RootController(PlainController):
         return "ok"
     
     def list(self):
-        return u", ".join([i.name for i in session.query(Foo).order_by('name').all()])
+        return ", ".join([i.name for i in session.query(Foo).order_by('name').all()])
 
 
 test_config = {

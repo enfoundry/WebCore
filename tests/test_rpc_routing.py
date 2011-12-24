@@ -1,11 +1,10 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 from unittest import TestCase
 from nose.tools import raises
-
 from web.core import Dialect
 from web.rpc import route, RoutingError
-
 
 
 class Foo(Dialect):

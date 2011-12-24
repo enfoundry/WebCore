@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 import textile
-
 import web.core
 
 from wiki import model as db
+from marrow.util.compat import unicode
 
 
 __all__ = ['RootController']

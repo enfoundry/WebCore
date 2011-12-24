@@ -1,13 +1,13 @@
 # encoding: utf-8
 
-from unittest import TestCase
 import web.core
+
+from unittest import TestCase
 from webob import Request
 from webob.cookies import Cookie
 
 
 __all__ = ['PlainController', 'WebTestCase']
-
 
 
 class PlainController(web.core.Controller):
@@ -71,6 +71,3 @@ class WebTestCase(TestCase):
             self.assertEqual(getattr(response, i), j)
         
         return response
-
-
-

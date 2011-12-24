@@ -13,6 +13,7 @@ from webob import Request, Response
 from web.core import middleware
 from web.core.dialects import Dialect
 from marrow.util.object import load_object
+from marrow.util.compat import basestring, unicode
 
 
 __all__ = ['Application']
@@ -129,14 +130,14 @@ class Application(object):
         environment['web.base'] = environment.get('SCRIPT_NAME', '')
         
         try:
-            if environment.has_key('paste.registry'):
+            if 'paste.registry' in environment:
                 environment['paste.registry'].register(web.core.request, Request(environment))
                 environment['paste.registry'].register(web.core.response, Response(request=web.core.request))
                 
-                if environment.has_key('beaker.cache'):
+                if 'beaker.cache' in environment:
                     environment['paste.registry'].register(web.core.cache, environment['beaker.cache'])
                 
-                if environment.has_key('beaker.session'):
+                if 'beaker.session' in environment:
                     environment['paste.registry'].register(web.core.session, environment['beaker.session'])
             
             if environment['PATH_INFO'] == '/_test_vars':
@@ -150,7 +151,7 @@ class Application(object):
             
             content = self.root(web.core.request._current_obj())
         
-        except web.core.http.HTTPException, e:
+        except web.core.http.HTTPException as e:
             environment['paste.registry'].register(web.core.response, e)
             return e(environment, start_response)
         
@@ -164,7 +165,7 @@ class Application(object):
         if isinstance(content, (list, types.GeneratorType)):
             web.core.response.app_iter = content
         elif isinstance(content, unicode):
-            web.core.response.unicode_body = content
+            web.core.response.text = content
         elif content is not None:
             web.core.response.body = content
         

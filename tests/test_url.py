@@ -1,12 +1,11 @@
 # encoding: utf-8
-
-from unittest import TestCase
-from nose.tools import eq_ as eq
+from __future__ import unicode_literals
 
 import web
+
+from nose.tools import eq_ as eq
 from web.core import Application
 from web.utils import URLGenerator
-
 from common import PlainController, WebTestCase
 
 

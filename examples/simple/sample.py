@@ -10,14 +10,12 @@ controller lines, and one line to serve it.
 from web.core import Controller
 
 
-
 class RootController(Controller):
     def index(self):
         return 'Hello world!'
 
     def hello(self, name):
         return "Hello, %(name)s!" % dict(name=name)
-
 
 
 if __name__ == '__main__':

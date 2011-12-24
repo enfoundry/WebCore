@@ -6,7 +6,6 @@ from datetime import datetime
 from web.core import Controller, request
 
 
-
 class NestedController(Controller):
     def index(self):
         return "This is an awesome nested controller."
@@ -20,7 +19,6 @@ class RootController(Controller):
     
     def environ(self, *args, **kw):
         return 'templates.environ', dict(environ=request.environ, args=args, kw=kw)
-
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@
 """Release information about WebCore."""
 
 import sys
+
 from collections import namedtuple
 
 

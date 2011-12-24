@@ -7,8 +7,8 @@ import web
 import warnings
 
 from gettext import NullTranslations, translation
-from web.core.templating import registry
 from marrow.util.convert import array
+from web.core.templating import registry
 
 
 __all__ = [
@@ -84,7 +84,7 @@ def get_translator(lang, conf=None, **kwargs):
     domain = conf.get('web.locale.domain') or conf['web.root.package']
     try:
         translator = translation(domain, conf['web.locale.path'], languages=lang, **kwargs)
-    except IOError, ioe: # pragma: no cover
+    except IOError as ioe:  # pragma: no cover
         raise LanguageError('IOError: %s' % ioe)
 
     translator.lang = lang

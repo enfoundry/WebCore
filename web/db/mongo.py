@@ -4,6 +4,7 @@ import re
 import warnings
 
 from pymongo.connection import Connection
+from marrow.util.compat import basestring
 
 
 __all__ = ['MongoMiddleware']
